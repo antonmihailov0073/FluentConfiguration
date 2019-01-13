@@ -1,4 +1,6 @@
 ﻿namespace LCA.FluentConfiguration.Core
 {
-    public abstract class ASection { }
+    public abstract class ASection
+    {
+    }
 }

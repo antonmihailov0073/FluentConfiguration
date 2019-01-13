@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using LCA.FluentConfiguration.Constants;
 using LCA.FluentConfiguration.Core;
+using LCA.FluentConfiguration.Settings;
 
 namespace LCA.FluentConfiguration.Models
 {
@@ -14,26 +14,19 @@ namespace LCA.FluentConfiguration.Models
         public Configuration(JObject jsonObject)
         {
             _jsonObject = jsonObject;
-            ConnectionStrings = LoadSettings<SettingsDictionary>(jsonObject, Defaults.Keys.ConnectionStrings);
+            ConnectionStrings = SettingsLoader.Load<SettingsDictionary>(jsonObject, Defaults.Keys.ConnectionStrings);
         }
 
 
         public SettingsDictionary ConnectionStrings { get; }
 
 
-        public TSection GetSection<TSection>(string name)
+        public TSection GetSection<TSection>(string key)
             where TSection : ASection
         {
-            return _jsonObject[name].ToObject<TSection>();
-        }
-        
-
-        private static TSettings LoadSettings<TSettings>(JObject jsonObject, string key)
-            where TSettings : SettingsDictionary
-        {
-            return jsonObject.TryGetValue(key, out JToken token)
-                ? (TSettings)Activator.CreateInstance(typeof(TSettings), token.ToObject<Dictionary<string, string>>())
-                : null;
+            return _jsonObject.TryGetValue(key, out JToken jsonToken)
+                ? jsonToken[key].ToObject<TSection>()
+                : throw new KeyNotFoundException($"Section with key \"{key}\" was not found");
         }
     }
 }
