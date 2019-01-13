@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using LCA.FluentConfiguration.Constants;
 using LCA.FluentConfiguration.Core;
-using LCA.FluentConfiguration.Settings;
+using LCA.FluentConfiguration.Helpers;
 
 namespace LCA.FluentConfiguration.Models
 {
@@ -14,7 +14,7 @@ namespace LCA.FluentConfiguration.Models
         public Configuration(JObject jsonObject)
         {
             _jsonObject = jsonObject;
-            ConnectionStrings = SettingsLoader.Load<SettingsDictionary>(jsonObject, Defaults.Keys.ConnectionStrings);
+            ConnectionStrings = SettingsHelper.Load<SettingsDictionary>(jsonObject, Defaults.Keys.ConnectionStrings);
         }
 
 

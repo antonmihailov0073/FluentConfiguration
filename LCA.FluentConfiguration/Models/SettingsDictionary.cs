@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LCA.FluentConfiguration.Settings
+namespace LCA.FluentConfiguration.Models
 {
     public class SettingsDictionary : Dictionary<string, string>
     {

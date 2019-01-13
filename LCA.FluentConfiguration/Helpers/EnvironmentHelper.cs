@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace LCA.FluentConfiguration.Providers
+namespace LCA.FluentConfiguration.Helpers
 {
     internal static class EnvironmentHelper
     {

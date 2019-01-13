@@ -4,7 +4,7 @@
     {
         public static class Keys
         {
-            public const string ConnectionStrings = "ConnectionStrings";
+            public const string ConnectionStrings = "connectionStrings";
         }
 
         public static class Folders

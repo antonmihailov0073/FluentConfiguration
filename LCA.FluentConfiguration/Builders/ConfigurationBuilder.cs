@@ -1,95 +1,46 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System;
 using LCA.FluentConfiguration.Constants;
 using LCA.FluentConfiguration.Core;
-using LCA.FluentConfiguration.Providers;
 using LCA.FluentConfiguration.Models;
+using LCA.FluentConfiguration.Helpers;
 
 namespace LCA.FluentConfiguration.Builders
 {
     public class ConfigurationBuilder
     {
         public static readonly string BaseDirectory;
-        public static readonly string StandartConfigsPath;
-
-
-        private string _basePath;
+        public static readonly string StandardConfigsPath;
 
 
         static ConfigurationBuilder()
         {
             BaseDirectory = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
-            StandartConfigsPath = Path.Combine(BaseDirectory, Defaults.Folders.Configurations);
+            StandardConfigsPath = Path.Combine(BaseDirectory, Defaults.Folders.Configurations);
         }
 
         public ConfigurationBuilder()
         {
-            AddedFiles = new List<string>();
+            IncludedFiles = new List<ConfigurationFile>();
         }
 
 
-        internal List<string> AddedFiles { get; set; }
+        internal List<ConfigurationFile> IncludedFiles { get; set; }
 
 
-        public ConfigurationBuilder SetBasePath(string path)
+        public ConfigurationBuilder ForPath(string basePath, Action<PathConfigurationBuilder> builderConfigutator)
         {
-            _basePath = path;
+            var pathBuilder = new PathConfigurationBuilder(basePath);
+            builderConfigutator(pathBuilder);
+            IncludedFiles.AddRange(pathBuilder.IncludedFiles);
             return this;
         }
 
-        public ConfigurationBuilder UseStandardSharedPath()
+        public IConfiguration Build()
         {
-            return SetBasePath(Path.Combine(StandartConfigsPath, Defaults.Folders.Shared));
-        }
-
-        public ConfigurationBuilder UseStandardLocalPath()
-        {
-            return SetBasePath(Path.Combine(StandartConfigsPath, Defaults.Folders.Local));
-        }
-
-        public ConfigurationBuilder IncludeJson(string filePath)
-        {
-            AddedFiles.Add(Path.Combine(_basePath, filePath));
-            return this;
-        }
-
-        public ConfigurationBuilder IncludeJsons(params string[] filePaths)
-        {
-            Array.ForEach(filePaths, p => IncludeJson(p));
-            return this;
-        }
-
-
-        internal IConfiguration Build()
-        {
-            var json = LoadJson();
+            var json = JsonHelper.LoadFromFiles(IncludedFiles);
             return new Configuration(json);
-        }
-
-
-        private JObject LoadJson()
-        {
-            var jsonView = new JObject();
-            foreach (var path in AddedFiles)
-            {
-                MergeJson(jsonView, path, true);
-                MergeJson(jsonView, EnvironmentHelper.GetEnvironmentSpecificFile(path), false);
-            }
-            return jsonView;
-        }
-
-
-        private static void MergeJson(JObject jsonView, string path, bool required)
-        {
-            if (!required && !File.Exists(path)) return;
-            var parsedJson = JObject.Parse(File.ReadAllText(path));
-            jsonView.Merge(parsedJson, new JsonMergeSettings
-            {
-                MergeArrayHandling = MergeArrayHandling.Replace,
-                MergeNullValueHandling = MergeNullValueHandling.Merge
-            });
         }
     }
 }

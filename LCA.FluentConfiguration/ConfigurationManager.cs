@@ -1,5 +1,5 @@
 ﻿using LCA.FluentConfiguration.Core;
-using LCA.FluentConfiguration.Settings;
+using LCA.FluentConfiguration.Models;
 
 namespace LCA.FluentConfiguration
 {
@@ -10,7 +10,7 @@ namespace LCA.FluentConfiguration
         public static SettingsDictionary ConnectionStrings { get; private set; }
         
 
-        private static void InitializeWith(IConfiguration configuration)
+        private static void InitializeUsing(IConfiguration configuration)
         {
             Configuration = configuration;
             ConnectionStrings = configuration.ConnectionStrings;

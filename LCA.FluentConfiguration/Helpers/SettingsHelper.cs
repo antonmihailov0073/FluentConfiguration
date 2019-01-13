@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using LCA.FluentConfiguration.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
-namespace LCA.FluentConfiguration.Settings
+namespace LCA.FluentConfiguration.Helpers
 {
-    internal static class SettingsLoader
+    internal static class SettingsHelper
     {
         public static TSettings Load<TSettings>(JObject jsonObject, string key)
             where TSettings : SettingsDictionary

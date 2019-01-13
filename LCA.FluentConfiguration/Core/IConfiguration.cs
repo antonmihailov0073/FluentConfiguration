@@ -1,4 +1,4 @@
-﻿using LCA.FluentConfiguration.Settings;
+﻿using LCA.FluentConfiguration.Models;
 
 namespace LCA.FluentConfiguration.Core
 {
