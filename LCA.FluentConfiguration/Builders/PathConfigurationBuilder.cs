@@ -20,20 +20,15 @@ namespace LCA.FluentConfiguration.Builders
         internal List<ConfigurationFile> IncludedFiles { get; }
 
 
-        public PathConfigurationBuilder IncludeJson(string filePath, bool isRequired = true)
+        public PathConfigurationBuilder IncludeJson(string filePath, bool isRequired = true, bool watch = false)
         {
             var file = new ConfigurationFile
             {
                 Path = Path.Combine(_basePath, filePath),
-                IsRequired = isRequired
+                IsRequired = isRequired,
+                Watch = watch
             };
             IncludedFiles.Add(file);
-            return this;
-        }
-
-        public PathConfigurationBuilder IncludeJsons(params string[] filePaths)
-        {
-            Array.ForEach(filePaths, p => IncludeJson(p));
             return this;
         }
     }

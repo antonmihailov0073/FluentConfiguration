@@ -10,14 +10,14 @@ namespace LCA.FluentConfiguration.Builders
 {
     public class ConfigurationBuilder
     {
-        public static readonly string BaseDirectory;
-        public static readonly string StandardConfigsPath;
+        public static readonly string ExecutingDirectory;
+        public static readonly string DefaultConfigurationsPath;
 
 
         static ConfigurationBuilder()
         {
-            BaseDirectory = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
-            StandardConfigsPath = Path.Combine(BaseDirectory, Defaults.Folders.Configurations);
+            ExecutingDirectory = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
+            DefaultConfigurationsPath = Path.Combine(ExecutingDirectory, Defaults.Folders.Configurations);
         }
 
         public ConfigurationBuilder()
@@ -26,13 +26,13 @@ namespace LCA.FluentConfiguration.Builders
         }
 
 
-        internal List<ConfigurationFile> IncludedFiles { get; set; }
+        internal List<ConfigurationFile> IncludedFiles { get; }
 
 
-        public ConfigurationBuilder ForPath(string basePath, Action<PathConfigurationBuilder> builderConfigutator)
+        public ConfigurationBuilder ForPath(string basePath, Action<PathConfigurationBuilder> pathBuilderConfigutator)
         {
             var pathBuilder = new PathConfigurationBuilder(basePath);
-            builderConfigutator(pathBuilder);
+            pathBuilderConfigutator(pathBuilder);
             IncludedFiles.AddRange(pathBuilder.IncludedFiles);
             return this;
         }

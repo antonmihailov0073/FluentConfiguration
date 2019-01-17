@@ -1,32 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using LCA.FluentConfiguration.Core;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using LCA.FluentConfiguration.Constants;
-using LCA.FluentConfiguration.Core;
-using LCA.FluentConfiguration.Helpers;
+using System.Collections.Generic;
 
 namespace LCA.FluentConfiguration.Models
 {
-    internal sealed class Configuration : IConfiguration
+    public class Configuration : IConfiguration
     {
-        private readonly JObject _jsonObject;
+        private readonly JToken _json;
 
 
-        public Configuration(JObject jsonObject)
+        internal Configuration(JToken json)
         {
-            _jsonObject = jsonObject;
-            ConnectionStrings = SettingsHelper.Load<SettingsDictionary>(jsonObject, Defaults.Keys.ConnectionStrings);
+            _json = json;
         }
 
 
-        public SettingsDictionary ConnectionStrings { get; }
-
-
-        public TSection GetSection<TSection>(string key)
-            where TSection : ASection
+        public IConfiguration this[string path]
         {
-            return _jsonObject.TryGetValue(key, out JToken jsonToken)
-                ? jsonToken[key].ToObject<TSection>()
-                : throw new KeyNotFoundException($"Section with key \"{key}\" was not found");
+            get
+            {
+                JToken token = null;
+                try
+                {
+                    token = _json.SelectToken(path, true);
+                }
+                catch (JsonException)
+                {
+                    return null;
+                }
+                return new Configuration(token);
+            }
+        }
+
+        
+        public TModel To<TModel>()
+        {
+            return _json.ToObject<TModel>();
         }
     }
 }

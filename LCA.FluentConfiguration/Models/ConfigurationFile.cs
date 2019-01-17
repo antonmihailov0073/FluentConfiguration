@@ -5,5 +5,7 @@
         public string Path { get; set; }
 
         public bool IsRequired { get; set; }
+
+        public bool Watch { get; set; }
     }
 }

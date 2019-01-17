@@ -1,0 +1,6 @@
+{
+    "endpoints": {
+        "auth": "auth.lca.su",
+        "notes": "notes.lca.su"
+    }
+}

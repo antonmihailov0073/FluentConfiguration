@@ -29,7 +29,8 @@ namespace LCA.FluentConfiguration.Helpers
                 var environmentFile = new ConfigurationFile
                 {
                     Path = EnvironmentHelper.GetEnvironmentSpecificFile(file.Path),
-                    IsRequired = false
+                    IsRequired = false,
+                    Watch = file.Watch
                 };
                 MergeFileIntoJson(jsonObject, environmentFile);
             }

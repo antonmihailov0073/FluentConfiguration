@@ -1,13 +1,10 @@
-﻿using LCA.FluentConfiguration.Models;
-
-namespace LCA.FluentConfiguration.Core
+﻿namespace LCA.FluentConfiguration.Core
 {
     public interface IConfiguration
     {
-        SettingsDictionary ConnectionStrings { get; }
+        IConfiguration this[string path] { get; }
 
 
-        TSection GetSection<TSection>(string name)
-            where TSection : ASection;
+        TModel To<TModel>();
     }
 }

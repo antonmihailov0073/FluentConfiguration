@@ -1,0 +1,6 @@
+{
+    "endpoints": {
+        "auth": "auth.lca.local:3424",
+        "notes": "notes.lca.local:6730"
+    }
+}
