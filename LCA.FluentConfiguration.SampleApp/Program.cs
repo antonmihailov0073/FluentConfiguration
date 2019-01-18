@@ -9,7 +9,7 @@ namespace LCA.FluentConfiguration.SampleApp
         public static void Main(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .ForPath("./Configurations", pathBuilder =>
+                .ForPath("Configurations", pathBuilder =>
                 {
                     pathBuilder.IncludeJson("endpoints.json")
                         .IncludeJson("optional.json", isRequired: false);
